@@ -60,6 +60,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* IA_MouseLook;
 
+	//UserWidget
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* OverheadWidget;
+
 public:	
 
 };
