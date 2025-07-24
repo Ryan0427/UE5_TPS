@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "TPS/Weapon/Weapon.h"
+#include "TPS/TPSComponent/CombatComponent.h"
 
 ATPSCharacter::ATPSCharacter()
 {
@@ -29,6 +30,18 @@ ATPSCharacter::ATPSCharacter()
 
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(RootComponent);
+
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	Combat->SetIsReplicated(true);
+}
+
+void ATPSCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (Combat)
+	{
+		Combat->Character = this;
+	}
 }
 
 void ATPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -95,6 +108,11 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	if (IA_MouseLook)
 	{
 		EnhancedInputComponent->BindAction(IA_MouseLook, ETriggerEvent::Triggered, this, &ATPSCharacter::MouseLook);
+	}
+
+	if (IA_Equip)
+	{
+		EnhancedInputComponent->BindAction(IA_Equip, ETriggerEvent::Triggered, this, &ATPSCharacter::EquipAction);
 	}
 }
 
@@ -165,6 +183,17 @@ void ATPSCharacter::JumpAction(const FInputActionValue& Value)
 	if (Value.Get<bool>())
 	{
 		Jump();
+	}
+}
+
+void ATPSCharacter::EquipAction(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
+	{
+		if (Combat && HasAuthority())
+		{
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
 	}
 }
 
