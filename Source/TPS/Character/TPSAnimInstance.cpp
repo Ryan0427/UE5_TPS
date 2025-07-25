@@ -29,4 +29,6 @@ void UTPSAnimInstance::NativeUpdateAnimation(float Deltatime)
 
 	bIsInAir = TPSCharacter->GetCharacterMovement()->IsFalling();
 	bIsAccelerating = TPSCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f ? true : false;
+	bWeaponEquipped = TPSCharacter->IsWeaponEquipped();
+
 }
