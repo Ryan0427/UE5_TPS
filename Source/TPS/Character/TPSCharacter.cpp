@@ -190,10 +190,26 @@ void ATPSCharacter::EquipAction(const FInputActionValue& Value)
 {
 	if (Value.Get<bool>())
 	{
-		if (Combat && HasAuthority())
+		if (Combat)
 		{
-			Combat->EquipWeapon(OverlappingWeapon);
+			if (HasAuthority())
+			{
+				Combat->EquipWeapon(OverlappingWeapon);
+			}
+
+			else
+			{
+				ServerEquipButtonPressed();
+			}
 		}
+	}
+}
+
+void ATPSCharacter::ServerEquipButtonPressed_Implementation()
+{
+	if (Combat)
+	{
+		Combat->EquipWeapon(OverlappingWeapon);
 	}
 }
 
