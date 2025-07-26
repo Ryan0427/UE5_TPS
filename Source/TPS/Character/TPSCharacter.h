@@ -32,6 +32,7 @@ protected:
 	void MouseLook(const FInputActionValue& Value);
 	void JumpAction(const FInputActionValue& Value);
 	void EquipAction(const FInputActionValue& Value);
+	void CrouchAction(const FInputActionValue& Value);
 
 private:
 
@@ -65,6 +66,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* IA_Equip;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_Crouch;
 
 	//UserWidget
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

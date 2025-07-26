@@ -33,6 +33,8 @@ ATPSCharacter::ATPSCharacter()
 
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
+
+	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 }
 
 void ATPSCharacter::PostInitializeComponents()
@@ -114,6 +116,11 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	{
 		EnhancedInputComponent->BindAction(IA_Equip, ETriggerEvent::Triggered, this, &ATPSCharacter::EquipAction);
 	}
+
+	if (IA_Crouch)
+	{
+		EnhancedInputComponent->BindAction(IA_Crouch, ETriggerEvent::Triggered, this, &ATPSCharacter::CrouchAction);
+	}
 }
 
 void ATPSCharacter::Move(const FInputActionValue& Value)
@@ -188,20 +195,35 @@ void ATPSCharacter::JumpAction(const FInputActionValue& Value)
 
 void ATPSCharacter::EquipAction(const FInputActionValue& Value)
 {
-	if (Value.Get<bool>())
+	if (Combat)
 	{
-		if (Combat)
+		if (HasAuthority())
 		{
-			if (HasAuthority())
-			{
-				Combat->EquipWeapon(OverlappingWeapon);
-			}
-
-			else
-			{
-				ServerEquipButtonPressed();
-			}
+			Combat->EquipWeapon(OverlappingWeapon);
 		}
+
+		else
+		{
+			ServerEquipButtonPressed();
+		}
+	}
+
+	/*if (Value.Get<bool>())
+	{
+		
+	}*/
+}
+
+void ATPSCharacter::CrouchAction(const FInputActionValue& Value)
+{
+	if (bIsCrouched)
+	{
+		UnCrouch();
+	}
+
+	else
+	{
+		Crouch();
 	}
 }
 
