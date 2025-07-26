@@ -33,6 +33,8 @@ protected:
 	void JumpAction(const FInputActionValue& Value);
 	void EquipAction(const FInputActionValue& Value);
 	void CrouchAction(const FInputActionValue& Value);
+	void AimActionPressed(const FInputActionValue& Value);
+	void AimActionReleased(const FInputActionValue& Value);
 
 private:
 
@@ -70,6 +72,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* IA_Crouch;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_Aim;
+
 	//UserWidget
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* OverheadWidget;
@@ -89,5 +94,6 @@ private:
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
+	bool IsAiming();
 
 };

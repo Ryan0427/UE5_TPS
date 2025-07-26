@@ -121,6 +121,16 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	{
 		EnhancedInputComponent->BindAction(IA_Crouch, ETriggerEvent::Triggered, this, &ATPSCharacter::CrouchAction);
 	}
+
+	if (IA_Aim)
+	{
+		EnhancedInputComponent->BindAction(IA_Aim, ETriggerEvent::Started, this, &ATPSCharacter::AimActionPressed);
+	}
+
+	if (IA_Aim)
+	{
+		EnhancedInputComponent->BindAction(IA_Aim, ETriggerEvent::Completed, this, &ATPSCharacter::AimActionReleased);
+	}
 }
 
 void ATPSCharacter::Move(const FInputActionValue& Value)
@@ -207,11 +217,6 @@ void ATPSCharacter::EquipAction(const FInputActionValue& Value)
 			ServerEquipButtonPressed();
 		}
 	}
-
-	/*if (Value.Get<bool>())
-	{
-		
-	}*/
 }
 
 void ATPSCharacter::CrouchAction(const FInputActionValue& Value)
@@ -224,6 +229,22 @@ void ATPSCharacter::CrouchAction(const FInputActionValue& Value)
 	else
 	{
 		Crouch();
+	}
+}
+
+void ATPSCharacter::AimActionPressed(const FInputActionValue& Value)
+{
+	if (Combat)
+	{
+		Combat->SetAiming(true);
+	}
+}
+
+void ATPSCharacter::AimActionReleased(const FInputActionValue& Value)
+{
+	if (Combat)
+	{
+		Combat->SetAiming(false);
 	}
 }
 
@@ -269,4 +290,9 @@ void ATPSCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 bool ATPSCharacter::IsWeaponEquipped()
 {
 	return (Combat && Combat->EquippedWeapon);
+}
+
+bool ATPSCharacter::IsAiming()
+{
+	return (Combat && Combat->bAiming);
 }
